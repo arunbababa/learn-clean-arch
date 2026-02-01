@@ -1,17 +1,15 @@
 import type { Request, Response } from "express";
 import { BookService } from "../buisinessLogic/bookService";
+import type { BookServiceInterface } from "../buisinessLogic/bookServiceInterface";
 
 export class BookController {
-  private bookSerivce: BookService;
-
-  constructor(){
-    this.bookSerivce = new BookService();
+  constructor(private readonly bookService: BookServiceInterface){
   }
 
   addBook = async (req: Request, res: Response): Promise<void> => {
     try {
       const title = req.body.title as string;
-      const book = await this.bookSerivce.addBook(title);
+      const book = await this.bookService.addBook(title);
       res.status(201).json(book);
     } catch (error) {
       console.log(error);
@@ -22,7 +20,7 @@ export class BookController {
   findBookByID = async (req: Request, res: Response): Promise<void> => {
     try {
       const id = req.params.id as string;
-      const book = await this.bookSerivce.findBookByID(id);
+      const book = await this.bookService.findBookByID(id);
       if (book) {
         res.status(200).json(book);
       } else {
@@ -37,7 +35,7 @@ export class BookController {
 
   findAllBooks = async (req: Request, res: Response): Promise<void> => {
     try {
-      const books = await this.bookSerivce.findAllBooks();
+      const books = await this.bookService.findAllBooks();
       res.status(200).json(books);
     } catch (error) {
       console.log(error);
